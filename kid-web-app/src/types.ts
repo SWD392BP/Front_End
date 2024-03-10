@@ -42,9 +42,12 @@ export interface PartyType{
 export interface ButtonPagination {
     page: number;
     isActive: boolean;
+<<<<<<< HEAD
 }
 
 export type Option = {
     value: string,
     label: string
+=======
+>>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
 }

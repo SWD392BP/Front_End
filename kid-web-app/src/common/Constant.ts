@@ -8,7 +8,11 @@ export const URL_BASE_API = "http://localhost:5200";
 /*
  ** TABLE DATA
 */
+<<<<<<< HEAD
 export const TABLE_DATA_SIZE = 5;
+=======
+export const TABLE_DATA_SIZE = 3;
+>>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
 export const NUMBER_BUTTON_PAGINATION = 5;
 
 /*
@@ -37,12 +41,15 @@ export const API_LOGIN = URL_BASE_API + "/User/login";
 */
 export const API_CREATE_PARTY = URL_BASE_API + "/Party";
 export const API_GET_LATEST_PARTY = URL_BASE_API + "/Party/";
+<<<<<<< HEAD
 
 /*
  ** ROOM API
 */
 export const API_CREATE_ROOM = URL_BASE_API + "/Room";
 
+=======
+>>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
 /*
  ** PARTY TYPE
 */

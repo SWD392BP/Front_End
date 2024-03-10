@@ -174,6 +174,7 @@ export default function Home() {
           </div>
         </div>
 
+<<<<<<< HEAD
         {/* <!-- CỬA HÀNG CỦA CHÚNG TÔI --> */}
         <div className="row d-flex justify-content-center bg-graylight">
           <div className="col-12 col-sm-12 col-md-9 my-2 pt-3">
@@ -192,6 +193,8 @@ export default function Home() {
               </div>
           </div>
         </div>
+=======
+>>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
         
   </div>
   </div>

@@ -48,9 +48,15 @@ export default function Page (){
                         <thead>
                         <tr>
                             <th className="w-20">Name</th>
+<<<<<<< HEAD
                             <th className="w-20">Image</th>
                             <th className="w-20">Type</th>
                             <th className="w-20">Address</th>
+=======
+                            <th className="w-20">Addres</th>
+                            <th className="w-20">Type</th>
+                            <th className="w-20">Image</th>
+>>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
                             <th className="w-20">Action</th>
                         </tr>
                         </thead>
@@ -58,11 +64,19 @@ export default function Page (){
                             { parties && parties.length > 0 && parties.map((party, index)=>(
                                 <tr key={index}>
                                     <td>{party.partyName}</td>
+<<<<<<< HEAD
                                     <td>
                                         <Image alt={""} width={400} height={400} src={"/ImageUpload/"+party.image} className="image-fit" style={{width: '100%', height: 150}} />
                                     </td>
                                     <td>{GetLabelOfPartyType(party.type)}</td>
                                     <td>{party.address}</td>
+=======
+                                    <td>{party.address}</td>
+                                    <td>{GetLabelOfPartyType(party.type)}</td>
+                                    <td>
+                                        <Image alt={""} width={400} height={400} src={"/ImageUpload/"+party.image} className="image-fit" style={{width: '100%', height: 150}} />
+                                    </td>
+>>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
                                     <td>
                                         {/* <Link href={"/admin/video-edit/" + video._id} className="me-3"><BorderColorIcon /></Link>
                                         <DeleteIcon className="cursor-pointer text-danger" onClick={()=>handleDeleteClick(video._id, video.title)}/> */}
