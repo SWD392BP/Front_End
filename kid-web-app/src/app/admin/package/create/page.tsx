@@ -1,19 +1,21 @@
 'use client'
 import Image from "next/image";
-import { Button, ThemeProvider } from "@mui/material";
+import { Autocomplete, AutocompleteChangeDetails, AutocompleteChangeReason, Button, TextField, ThemeProvider } from "@mui/material";
 import { Field, Form, Formik } from "formik";
 import Link from "next/link";
 import * as ColorUtil from "@/common/ColorUtil";
 import AddIcon from '@mui/icons-material/Add';
 import * as Yup from 'yup';
-import { UserInfoCookie } from "@/types";
+import { UserInfoCookie, Option } from "@/types";
 import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
-import {PARTY_TYPE_LIST, STATUS_CODE_ERROR, STATUS_CODE_OK, USER_COOKIE } from "@/common/Constant";
+import {PACKAGE_TYPE_LIST, PARTY_TYPE_LIST, STATUS_CODE_ERROR, STATUS_CODE_OK, USER_COOKIE } from "@/common/Constant";
 import { ChangeEvent } from "react";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import React from "react";
 import { ApiCreateParty } from "@/service/PartyService";
+import { ApiCreateRoom } from "@/service/RoomService";
+import { ApiCreatePackage } from "@/service/PackageService";
 
 export default function Page (){
     const [cookieUser, setCookieUser, removeCookieUser] = useCookies([USER_COOKIE])
@@ -21,6 +23,13 @@ export default function Page (){
     const inputRef = React.useRef<HTMLInputElement>(null);
     const [thumbnailImage, setThumbnailImage] = React.useState<File | null>(null);
     const [thumbnailImageSrc, setThumbnailImageSrc] = React.useState<string | undefined>(undefined);
+    const [optionType,setOptionType] = React.useState<Option[] | null>(null);
+    const [listType, setListType] = React.useState<string[] | null>(null);
+    const [optionTypeSelected,setOptionTypeSelected] = React.useState<Option[] | null>(null);
+
+    React.useEffect(()=>{
+        fetchTypeServe();
+    },[]);
 
     const handleAddPhotoClick = () => {
         if (inputRef.current) {
@@ -37,55 +46,90 @@ export default function Page (){
         }
     };
 
-    const handleSubmitParty = async (values : PartyFormValues) => {
+    const handleSubmitPackage = async (values : PartyFormValues) => {
         const userInfoCookie = cookieUser.userInfoCookie as UserInfoCookie;
         if(userInfoCookie){
-            var result = await ApiCreateParty(userInfoCookie.userID,values.PartyName, values.Address, values.Type, values.Description, thumbnailImage, userInfoCookie.token);
+            var result = await ApiCreatePackage(userInfoCookie.userID,values.PackageName, values.Price, values.ActiveDays, values.Description, thumbnailImage, userInfoCookie.token);
             if(result?.code==STATUS_CODE_OK){
-                alert("Create party successfully!");
+                alert("Create package successfully!");
             }else if(result?.code==STATUS_CODE_ERROR){
                 alert(result?.message);
             }else{
-                alert("Create party failed!");
+                alert("Create package failed!");
             }
         }
     }
+
+    function fetchTypeServe(){
+        const arrayOptions = [] as Option[];
+        const firstValue = [] as string[];
+        for(let i = 0; i < PARTY_TYPE_LIST.length; i++){
+            if(i == 0){
+                firstValue.push(PARTY_TYPE_LIST[i].value);
+                setListType(firstValue);
+            }
+            const item = {
+                value: PARTY_TYPE_LIST[i].value,
+                label: PARTY_TYPE_LIST[i].label,
+            } as Option;
+            arrayOptions.push(item);
+        }
+        setOptionType(arrayOptions);
+        if(arrayOptions.length > 0){
+            setOptionTypeSelected([arrayOptions[0]]);
+        }
+    }
+
+    const handleChangeType = (
+        event: ChangeEvent<{}>, // Adjust the event type based on Autocomplete's expected type
+        value: Option[], 
+        reason: AutocompleteChangeReason, 
+        details?: AutocompleteChangeDetails<Option> | undefined
+      ) => {
+        // Handle the change here
+        const arrayId = [];
+        for(let i = 0 ; i < value.length; i++){
+            arrayId.push(value[i].value);
+        }
+        setListType(arrayId);
+        setOptionTypeSelected(value);
+    };
     return(
         <div className="row d-flex justify-content-center bg-graylight">
             <div className="col-12 col-sm-12 col-md-9 my-2 pt-3">
-                <h1 className="fw-bold text-danger">PARTY <span className="text-dark">CREATE</span></h1>
+                <h1 className="fw-bold text-danger">PACKAGE <span className="text-dark">CREATE</span></h1>
                 <Formik 
                     initialValues={{
-                        PartyName: 'Tiệc sinh nhật LUXURY',
-                        Address: 'Hồ Chí Minh',
-                        Type: PARTY_TYPE_LIST[0].value,
-                        Description: "Một sinh nhật thật ý nghĩa và đặc biệt để đánh dấu cột mốc quan trọng của các thiên thần nhỏ luôn là điều bố mẹ băn khoăn? Với sự đa dạng trong các gói tiệc sinh nhật, tiNi hứa hẹn sẽ mang đến cho các thiên thần nhỏ một bữa tiệc đầy bất ngờ và tràn ngập những khoảnh khắc đáng nhớ.",
+                        PackageName: 'Gói Member',
+                        Price: 1000000,
+                        ActiveDays: PACKAGE_TYPE_LIST[0].value,
+                        Description: "Gói dịch vụ tổng hợp sử dụng dịch vụ cao cấp của Kid Booking với hàng ngàng tính năng vượt trội. Miễn phí truy cập và đăng tải dịch vụ Booking của cá nhân hoặc tổ chức. Mang đến trải nghiệm dịch vụ tuyệt vời cho các Host Party trên toàn quốc."
                     }}
                     validationSchema={PartyValidateSchema}
-                    onSubmit={values=>handleSubmitParty(values)}>
+                    onSubmit={values=>handleSubmitPackage(values)}>
                         {({ errors, setFieldValue, touched }) => (
                         <Form>
                             <div className="row">
                                 {/* LEFT FORM */}
                                 <div className="col-12 col-sm-12 col-md-6">
                                     <div className="form-group mt-2">
-                                        <label className="fw-bold" htmlFor="PartyName">Party Name: </label>
-                                        <Field type="text" name="PartyName" className="form-control" required/>
-                                        {errors.PartyName && touched.PartyName ? (
-                                            <div className="fw-bold text-danger">{errors.PartyName}</div>
+                                        <label className="fw-bold" htmlFor="PackageName">Package Name: </label>
+                                        <Field type="text" name="PackageName" className="form-control" required/>
+                                        {errors.PackageName && touched.PackageName ? (
+                                            <div className="fw-bold text-danger">{errors.PackageName}</div>
                                         ) : null}
                                     </div>
                                     <div className="form-group mt-2">
-                                        <label className="fw-bold" htmlFor="Address">Address: </label>
-                                        <Field type="text" name="Address" className="form-control" required/>
-                                        {errors.Address && touched.Address ? (
-                                            <div className="fw-bold text-danger">{errors.Address}</div>
+                                        <label className="fw-bold" htmlFor="PartyName">Price: </label>
+                                        <Field type="text" name="Price" className="form-control" required/>
+                                        {errors.Price && touched.Price ? (
+                                            <div className="fw-bold text-danger">{errors.Price}</div>
                                         ) : null}
                                     </div>
                                     <div className="form-group mt-2">
-                                        <label className="fw-bold" htmlFor="Type">Type: </label>
-                                        <Field as="select" className="form-select" name="Type">
-                                            {PARTY_TYPE_LIST.map((row, index)=>(
+                                        <label className="fw-bold" htmlFor="ActiveDays">Active Days: </label>
+                                        <Field as="select" className="form-select" name="ActiveDays">
+                                            {PACKAGE_TYPE_LIST.map((row, index)=>(
                                                 <option key={index} value={row.value}>{row.label}</option>
                                             ))}
                                         </Field>
@@ -121,7 +165,7 @@ export default function Page (){
                                 <Button type="submit" variant="contained" startIcon={<AddIcon />} color="error">
                                     Register
                                 </Button>
-                                <Link href="/host/party" className="ms-2">
+                                <Link href="/admin/package" className="ms-2">
                                     <ThemeProvider theme={ColorUtil.ColorGray}>
                                         <Button variant="contained" color="primary">back</Button>
                                     </ThemeProvider>
@@ -138,19 +182,19 @@ export default function Page (){
 
 
 const PartyValidateSchema = Yup.object().shape({
-    PartyName: Yup.string()
-      .min(10,'PartyName name must be at least 10 characters')  
+    PackageName: Yup.string()
+      .min(3,'PartyName name must be at least 3 characters')  
       .max(255, 'PartyName maximum 255 characters')
       .required('Please enter PartyName.'),
-    Address: Yup.string()
-      .min(10,'Address must be at least 10 characters')  
-      .max(255, 'Address maximum 255 characters')
-      .required('Please enter Address.'),
+    Price: Yup.number()
+      .min(100000,'Price must be at least 100000')  
+      .max(1000000000, 'Price maximum 1000000000')
+      .required('Please enter Price.'),
 });
 
 interface PartyFormValues {
-    PartyName: string;
-    Address: string;
-    Type: string;
+    PackageName: string;
+    Price: number;
     Description: string;
+    ActiveDays: number;
 }

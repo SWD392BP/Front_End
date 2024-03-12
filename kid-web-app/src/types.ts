@@ -26,6 +26,28 @@ export interface Party {
     hostUserId: number,
 }
 
+export interface Room {
+    roomID: number,
+    roomName: string,
+    minPeople: number,
+    maxPeople: number,
+    price: number,
+    type: string,
+    description: string,
+    image: string,
+    hostUserId: number,
+}
+
+export interface Package {
+    packageID: number,
+    packageName: string,
+    price: number,
+    activeDays: number,
+    description: string,
+    status: string,
+    image: string,
+    adminUserId: number,
+}
 
 export interface UserInfoCookie{
     userID: number;
@@ -42,12 +64,9 @@ export interface PartyType{
 export interface ButtonPagination {
     page: number;
     isActive: boolean;
-<<<<<<< HEAD
 }
 
 export type Option = {
     value: string,
     label: string
-=======
->>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
 }

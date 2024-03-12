@@ -6,13 +6,14 @@ import { PartyType } from "@/types";
 export const URL_BASE_API = "http://localhost:5200";
 
 /*
+ ** HTTP SERVER
+*/
+export const PUBLIC_IMAGE_UPLOAD = "/ImageUpload/";
+
+/*
  ** TABLE DATA
 */
-<<<<<<< HEAD
 export const TABLE_DATA_SIZE = 5;
-=======
-export const TABLE_DATA_SIZE = 3;
->>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
 export const NUMBER_BUTTON_PAGINATION = 5;
 
 /*
@@ -41,15 +42,42 @@ export const API_LOGIN = URL_BASE_API + "/User/login";
 */
 export const API_CREATE_PARTY = URL_BASE_API + "/Party";
 export const API_GET_LATEST_PARTY = URL_BASE_API + "/Party/";
-<<<<<<< HEAD
+export const API_GET_TOP_MONTH_PARTY = URL_BASE_API + "/Party/TopMonth/";
 
 /*
  ** ROOM API
 */
 export const API_CREATE_ROOM = URL_BASE_API + "/Room";
+export const API_GET_LATEST_ROOM = URL_BASE_API + "/Room/";
 
-=======
->>>>>>> d83ced5cc11c325d5f9a7e9fcf07254957b32b36
+/*
+ ** ROOM API
+*/
+export const API_CREATE_PACKAGE = URL_BASE_API + "/Package";
+export const API_GET_LATEST_PACKAGE = URL_BASE_API + "/Package/";
+
+
+/*
+ ** PACKAGE TYPE LIST
+*/
+export const PACKAGE_TYPE_LIST = [
+    {
+        value: 30,
+        label: "1 tháng"
+    },
+    {
+        value: 90,
+        label: "3 tháng"
+    },
+    {
+        value: 365,
+        label: "1 năm"
+    },
+    {
+        value: 730,
+        label: "2 năm"
+    },
+];
 /*
  ** PARTY TYPE
 */
@@ -59,20 +87,20 @@ export const PARTY_TYPE_LIST = [
         label: "Sinh nhật"
     },
     {
-        value: "DAMCUOI",
-        label: "Đám cưới"
+        value: "HOPMAT",
+        label: "Họp mặt"
     },
     {
         value: "LIENHOAN",
         label: "Liên hoan"
     },
     {
-        value: "TATNIEN",
-        label: "Tất niên"
+        value: "NGOAITROI",
+        label: "Ngoài trời"
     },
     {
-        value: "TANGIA",
-        label: "Tân gia"
+        value: "KHUVUICHOI",
+        label: "Khu vui chơi"
     },
     {
         value: "KHAC",
