@@ -46,9 +46,9 @@ export default function MenuBarHeader(){
     return(
         <div className="bg-white">
             {/* // <!-- TOP HEADER --> */}
-            <div className="row d-flex justify-content-center bg-danger">
+            <div className="row d-flex justify-content-center bg-primary">
                 <div className="col-12 col-sm-12 col-md-9 d-flex my-2">
-                    <span className="text-white">Over 350 of World's Best Natural Products | Vitamin 100% chính hãng.</span>
+                    <span className="text-white">Over 350 of World's Best Natural Services | Booking Kid Party.</span>
                     <div className="flex-grow-1"></div>
                     <span className="text-white cursor-pointer">Đăng ký nhận khuyến mãi</span>
                 </div>
@@ -56,16 +56,16 @@ export default function MenuBarHeader(){
             {/* // <!-- LOGO BAR --> */}
             <div className="row d-flex justify-content-center">
                 <div className="col-12 col-sm-12 col-md-9 d-flex my-2 row">
-                    <div className="col-12 col-sm-12 col-md-12 col-lg-3">
-                        <Image alt={""} src="/img/LOGO.png" width={250} height={80} />
+                    <div className="col-12 col-sm-12 col-md-12 col-lg-2">
+                        <Image alt={""} src="/img/LOGO.png" width={150} height={120}/>
                     </div>
-                    <div className="col-12 col-sm-12 col-md-12 col-lg-6">
+                    <div className="col-12 col-sm-12 col-md-12 col-lg-7">
                         <div className="form-group d-flex align-items-center h-100 w-100">
                             <input className="form-control" placeholder="Tìm kiếm" />
-                            <button className="btn btn-danger">Seach</button>
+                            <button className="btn btn-primary">Seach</button>
                         </div>
                     </div>
-                    <div className="col-12 col-sm-12 col-md-12 col-lg-3 d-flex align-items-center">
+                    <div className="col-12 col-sm-12 col-md-12 col-lg-3 d-flex align-items-center justify-content-end">
                         <Link href={"/login"}><span className="text-primary cursor-pointer">{isLogged?"Đăng xuất":"Đăng nhập"} |</span></Link>
                         <span className="ms-2 text-danger cursor-pointer">Giỏ hàng</span>
                     </div>
@@ -76,7 +76,7 @@ export default function MenuBarHeader(){
                 <div className="col-12 col-sm-12 col-md-9 d-flex row">
                     <nav className="navbar navbar-expand-sm">
                         <div className="container-fluid m-0 p-0">
-                        <a className="navbar-brand" href="#">Trang chủ</a>
+                        <Link className="navbar-brand" href="/">Trang chủ</Link>
                         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
                             <span className="navbar-toggler-icon"></span>
                         </button>
@@ -87,13 +87,19 @@ export default function MenuBarHeader(){
                                         {isAdminRoute && (
                                             <>
                                                <li className="nav-item">
-                                                    <a className="nav-link" href="#">Dashboard</a>
+                                                    <a className="nav-link" href="/admin/dashboard">Dashboard</a>
+                                                </li> 
+                                                <li className="nav-item">
+                                                    <a className="nav-link" href="/admin/package">Package</a>
                                                 </li> 
                                             </>
                                         ) || isHostRoute && (
                                             <>
                                                <li className="nav-item">
-                                                    <a className="nav-link" href="#">Party</a>
+                                                    <Link className="nav-link" href="/host/party">Party</Link>
+                                                </li>
+                                                <li className="nav-item">
+                                                    <Link className="nav-link" href="/host/room">Room</Link>
                                                 </li> 
                                             </>
                                         ) ||(
