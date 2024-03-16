@@ -37,6 +37,7 @@ export const USER_COOKIE = "userInfoCookie";
 */
 export const API_REGISTER_USER = URL_BASE_API + "/User/register";
 export const API_LOGIN = URL_BASE_API + "/User/login";
+
 /*
  ** MENU API
 */
@@ -52,11 +53,14 @@ export const API_GET_LATEST_PARTY = URL_BASE_API + "/Party/";
 export const API_GET_TOP_MONTH_PARTY = URL_BASE_API + "/Party/TopMonth/";
 export const API_GET_PARTY_BY_ID = URL_BASE_API + "/Party/";
 export const API_GET_SEARCH_PARTY = URL_BASE_API + "/Party/SearchBooking/";
+<<<<<<< HEAD
 
 /*
  ** SLOT API
 */
 export const API_GET_SLOT_BY_ROOM_ID = URL_BASE_API + "/Slot/byRoomID/";
+=======
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 
 /*
  ** ROOM API

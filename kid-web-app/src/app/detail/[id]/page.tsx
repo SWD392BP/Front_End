@@ -1,13 +1,18 @@
 'use client';
 import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, STATUS_CODE_OK, TABLE_DATA_SIZE, USER_COOKIE } from "@/common/Constant";
 import { ApiGetPartyById } from "@/service/PartyService";
+<<<<<<< HEAD
 import { Party, Room, Slot, UserInfoCookie } from "@/types";
+=======
+import { Party, Room, UserInfoCookie } from "@/types";
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 import React from "react";
 import Image from "next/image";
 import PlaceIcon from '@mui/icons-material/Place';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import ShareIcon from '@mui/icons-material/Share';
+<<<<<<< HEAD
 import { Field, Form, Formik, FormikValues } from "formik";
 import PaginationBar from "@/component/PaginationBar";
 import { useCookies } from "react-cookie";
@@ -31,6 +36,13 @@ const style = {
   p: 4,
 };
 
+=======
+import { Field, Form, Formik } from "formik";
+import PaginationBar from "@/component/PaginationBar";
+import { useCookies } from "react-cookie";
+import { ApiGetLatestRoom } from "@/service/RoomService";
+import { FormatVND, GetLabelOfPartyType } from "@/util/TextUtil";
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 type Params = {
     params: {
         id: number;
@@ -42,12 +54,15 @@ export default function Page({ params } : Params){
     const [rooms, setRooms] = React.useState<Room[] | null>(null);
     const [totalPage, setTotalPage] = React.useState(0);
     const [currentPage, setCurrentPage] = React.useState(1);
+<<<<<<< HEAD
     const [roomView, setRoomView] = React.useState<Room | null>(null);
     const [roomViewSlot, setRoomViewSlot] = React.useState<Slot[] | null>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+=======
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 
     React.useEffect(()=>{
         fetchGetPartyById(params.id);
@@ -61,6 +76,7 @@ export default function Page({ params } : Params){
         }
     }
 
+<<<<<<< HEAD
     async function fetchGetSlotByRoomID(id: number){
         const result = await ApiGetSlotByRoomID(id);
         if(result && result.code == STATUS_CODE_OK){
@@ -79,6 +95,8 @@ export default function Page({ params } : Params){
     //     setRoomViewSlot(null);
     // }
 
+=======
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
     async function fetchAllRoomByHostId(page: number, hostId: number){
         const result = await ApiGetLatestRoom(page, TABLE_DATA_SIZE, hostId);
         if(result && result.code == STATUS_CODE_OK){
@@ -90,6 +108,10 @@ export default function Page({ params } : Params){
     }
 
     function handleSubmitSearch(values: { PartyName: string; Address: string; Type: string; Description: string; }): any {
+<<<<<<< HEAD
+=======
+        throw new Error("Function not implemented.");
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
     }
 
     const handleChangePage = (num : number) => {
@@ -100,6 +122,7 @@ export default function Page({ params } : Params){
         }
     }
 
+<<<<<<< HEAD
     const handleClickViewRoom = async (room: Room) => {
         setRoomView(room);
         await fetchGetSlotByRoomID(room.roomID);
@@ -116,6 +139,8 @@ export default function Page({ params } : Params){
         setSelectedIndex(selectedIndex); // Ví dụ: setSelectedIndex là một hàm để cập nhật trạng thái của radio được chọn
     };
 
+=======
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
     return (
         <div className="row d-flex justify-content-center bg-white">
             <div className="col-12 col-sm-12 col-md-9 my-2">
@@ -157,7 +182,11 @@ export default function Page({ params } : Params){
                                 <ShareIcon className="text-primary" /> <b className="ms-2">SHARE</b>
                             </div>
                         </div>
+<<<<<<< HEAD
                         <Image alt={party?.partyName??''} src={PUBLIC_IMAGE_UPLOAD + party?.image} width={1000} height={1000} className="image-fit" style={{width:'100%',height:500,borderRadius:15}}/>
+=======
+                        <Image alt={party?.partyName??''} src={PUBLIC_IMAGE_UPLOAD + party?.image} width={1000} height={1000} style={{width:'100%',height:500,borderRadius:15}}/>
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
                     </div>
                 </div>
 
@@ -224,7 +253,11 @@ export default function Page({ params } : Params){
                                         <td>{FormatVND(room.price.toString())}</td>
                                         <td>{room.minPeople} - {room.maxPeople} people</td>
                                         <td>
+<<<<<<< HEAD
                                             <span className="text-decoration-underline text-primary cursor-pointer" onClick={()=>handleClickViewRoom(room)}>View Room</span>
+=======
+                                            <span className="text-decoration-underline text-primary cursor-pointer">View Room</span>
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
                                         </td>
                                     </tr>
                                 )) || (
@@ -248,6 +281,7 @@ export default function Page({ params } : Params){
             </Formik>
 
 
+<<<<<<< HEAD
             {/* MODAL BOOKING  */}
             <div>
                 <Modal
@@ -299,6 +333,8 @@ export default function Page({ params } : Params){
             </div>
 
 
+=======
+>>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
             </div>
         </div>
     );
