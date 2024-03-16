@@ -13,7 +13,7 @@ export const PUBLIC_IMAGE_UPLOAD = "/ImageUpload/";
 /*
  ** TABLE DATA
 */
-export const TABLE_DATA_SIZE = 5;
+export const TABLE_DATA_SIZE = 2;
 export const NUMBER_BUTTON_PAGINATION = 5;
 
 /*
@@ -38,24 +38,44 @@ export const USER_COOKIE = "userInfoCookie";
 export const API_REGISTER_USER = URL_BASE_API + "/User/register";
 export const API_LOGIN = URL_BASE_API + "/User/login";
 /*
+ ** MENU API
+*/
+export const API_CREATE_MENU = URL_BASE_API + "/Menu";
+export const API_GET_MENU_BY_PARTY_ID = URL_BASE_API + "/Menu/byPartyId/";
+export const API_GET_MENU_BY_HOST_ID = URL_BASE_API + "/Menu/byHostId/";
+
+/*
  ** PARTY API
 */
 export const API_CREATE_PARTY = URL_BASE_API + "/Party";
 export const API_GET_LATEST_PARTY = URL_BASE_API + "/Party/";
 export const API_GET_TOP_MONTH_PARTY = URL_BASE_API + "/Party/TopMonth/";
+export const API_GET_PARTY_BY_ID = URL_BASE_API + "/Party/";
+export const API_GET_SEARCH_PARTY = URL_BASE_API + "/Party/SearchBooking/";
+
+/*
+ ** SLOT API
+*/
+export const API_GET_SLOT_BY_ROOM_ID = URL_BASE_API + "/Slot/byRoomID/";
 
 /*
  ** ROOM API
 */
 export const API_CREATE_ROOM = URL_BASE_API + "/Room";
 export const API_GET_LATEST_ROOM = URL_BASE_API + "/Room/";
+export const API_GET_ROOM_BY_ID = URL_BASE_API + "/Room/";
 
 /*
- ** ROOM API
+ ** PACKAGE API
 */
 export const API_CREATE_PACKAGE = URL_BASE_API + "/Package";
 export const API_GET_LATEST_PACKAGE = URL_BASE_API + "/Package/";
 
+/*
+ ** ROOM API
+*/
+export const DESCRIPTION_SHORT_LENGTH = 200;
+export const TITLE_SHORT_LENGTH = 38;
 
 /*
  ** PACKAGE TYPE LIST

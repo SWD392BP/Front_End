@@ -1,7 +1,7 @@
 import * as Constant from "@/common/Constant";
 import { JsonBody } from "@/types";
 
-export async function ApiCreateParty(HostUserId: number,PartyName: string, Address: string, Type: string, Description: string, Image: File | null, token: string){
+export async function ApiCreateParty(HostUserId: number,PartyName: string, Address: string, Type: string, Description: string, listMenu: string[], Image: File | null, token: string){
     var data = new FormData();    
     data.append("HostUserId", HostUserId.toString());
     data.append("PartyName", PartyName);
@@ -11,6 +11,9 @@ export async function ApiCreateParty(HostUserId: number,PartyName: string, Addre
     if (Image) {
         data.append("Image", Image);
     }
+    listMenu.forEach((value, index) => {
+        data.append(`MenuList[${index}]`, value);
+    });
     const response = await fetch(Constant.API_CREATE_PARTY, {
         method: "POST",
         body: data,
@@ -46,4 +49,31 @@ export async function ApiGetTopMonthParty(page: number,size: number){
     }
     return null;
 }
+
+export async function ApiGetPartyById(id: number){
+    const response = await fetch(Constant.API_GET_PARTY_BY_ID + id);
+    if(response.ok){
+        const result = await response.json();
+        return result as JsonBody;
+    }
+    return null;
+}
+
+export async function ApiGetPartiesSearch(Type: string, DateBooking: string, SlotTime :string, People: number, page: number, size: number){
+    const data = new URLSearchParams();
+    data.append("Type", Type);
+    data.append("DateBooking", DateBooking);
+    data.append("SlotTime", SlotTime);
+    data.append("People", People.toString());
+    const response = await fetch(Constant.API_GET_SEARCH_PARTY + page + "/" + size,{
+        method: "POST",
+        body: data
+    });
+    if(response.ok){
+        const result = await response.json();
+        return result as JsonBody;
+    }
+    return null;
+}
+
 

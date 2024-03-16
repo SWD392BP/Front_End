@@ -18,12 +18,22 @@ export interface User {
 
 export interface Party {
     partyID: number,
+    monthViewed: number,
     partyName: string,
     address: string,
     type: string,
     description: string,
+    createDate: string,
     image: string,
-    hostUserId: number,
+    hostUserID: number,
+}
+
+export interface Menu {
+    menuID: number,
+    menuName: string,
+    price: number,
+    description: string,
+    image: string,
 }
 
 export interface Room {
@@ -36,6 +46,13 @@ export interface Room {
     description: string,
     image: string,
     hostUserId: number,
+}
+
+export interface Slot {
+    slotID: number,
+    startTime: string,
+    endTime: string,
+    roomID: number,
 }
 
 export interface Package {
