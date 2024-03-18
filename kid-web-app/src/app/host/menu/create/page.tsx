@@ -54,7 +54,11 @@ export default function Page (){
     return(
         <div className="row d-flex justify-content-center bg-graylight">
             <div className="col-12 col-sm-12 col-md-9 my-2 pt-3">
+<<<<<<< HEAD
                 <h1 className="fw-bold text-primary">MENU <span className="text-dark">CREATE</span></h1>
+=======
+                <h1 className="fw-bold text-danger">MENU <span className="text-dark">CREATE</span></h1>
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
                 <Formik 
                     initialValues={{
                         MenuName: 'Combo gà siêu quậy',
@@ -110,7 +114,11 @@ export default function Page (){
                             </div>
                             
                             <div className="mt-4">
+<<<<<<< HEAD
                                 <Button type="submit" variant="contained" startIcon={<AddIcon />} color="primary">
+=======
+                                <Button type="submit" variant="contained" startIcon={<AddIcon />} color="error">
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
                                     Register
                                 </Button>
                                 <Link href="/host/party" className="ms-2">

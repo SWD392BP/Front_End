@@ -1,7 +1,11 @@
 'use client';
 import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, STATUS_CODE_OK, TABLE_DATA_SIZE, TABLE_ROOM_BOOKING_SIZE, USER_COOKIE } from "@/common/Constant";
 import { ApiGetPartyById } from "@/service/PartyService";
+<<<<<<< HEAD
 import { Menu, Party, Room, Slot, UserInfoCookie } from "@/types";
+=======
+import { Party, Room, Slot, UserInfoCookie } from "@/types";
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
 import React from "react";
 import Image from "next/image";
 import PlaceIcon from '@mui/icons-material/Place';
@@ -18,8 +22,11 @@ import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { ApiGetSlotByRoomID } from "@/service/SlotService";
+<<<<<<< HEAD
 import { ApiGetMenuByPartyID } from "@/service/MenuService";
 import { ApiCreateBooking } from "@/service/BookingService";
+=======
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -48,6 +55,7 @@ export default function Page({ params } : Params){
     const [roomView, setRoomView] = React.useState<Room | null>(null);
     const [roomViewSlot, setRoomViewSlot] = React.useState<Slot[] | null>(null);
     const [selectedIndex, setSelectedIndex] = React.useState(0);
+<<<<<<< HEAD
     const [selectedMenuIndex, setSelectedMenuIndex] = React.useState(0);
     const [open, setOpen] = React.useState(false);
     const [isBookRoom, setIsBookRoom] = React.useState(false);
@@ -57,6 +65,11 @@ export default function Page({ params } : Params){
     const currentDate = new Date();
     const tomorrowDate = new Date(currentDate);
     tomorrowDate.setDate(currentDate.getDate() + 1); // Thêm 1 ngày
+=======
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
 
     React.useEffect(()=>{
         fetchGetPartyById(params.id);
@@ -71,6 +84,7 @@ export default function Page({ params } : Params){
         }
     }
 
+<<<<<<< HEAD
     async function fetchMenuByPartyId(id: number){
         const result = await ApiGetMenuByPartyID(id);
         if(result && result.code == STATUS_CODE_OK){
@@ -78,6 +92,8 @@ export default function Page({ params } : Params){
         }
     }
 
+=======
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
     async function fetchGetSlotByRoomID(id: number){
         const result = await ApiGetSlotByRoomID(id);
         if(result && result.code == STATUS_CODE_OK){
@@ -107,6 +123,7 @@ export default function Page({ params } : Params){
     }
 
     function handleSubmitSearch(values: { PartyName: string; Address: string; Type: string; Description: string; }): any {
+<<<<<<< HEAD
     }
     const handleSubmitBooking = async (values : BookingFormValues) => {
         const userInfoCookie = cookieUser.userInfoCookie as UserInfoCookie;
@@ -122,6 +139,8 @@ export default function Page({ params } : Params){
         }else{
             alert("Only user can be booking");
         }
+=======
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
     }
 
     const handleChangePage = (num : number) => {
@@ -139,12 +158,22 @@ export default function Page({ params } : Params){
         handleOpen();
     }
 
+<<<<<<< HEAD
     const handleRadioChange = (selectedIndex: number) => {
         setSelectedIndex(selectedIndex);
     };
 
     const handleRadioMenuChange = (selectedIndex: number) => {
         setSelectedMenuIndex(selectedIndex); 
+=======
+    function handleSubmitNothing(values: FormikValues): void | Promise<any> {
+        
+    }
+
+    const handleRadioChange = (selectedIndex: number) => {
+        // Cập nhật trạng thái của ứng dụng hoặc lưu trữ giá trị của radio được chọn ở đây
+        setSelectedIndex(selectedIndex); // Ví dụ: setSelectedIndex là một hàm để cập nhật trạng thái của radio được chọn
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
     };
 
     return (
@@ -288,6 +317,7 @@ export default function Page({ params } : Params){
                     aria-describedby="modal-modal-description"
                     >
                     <Box sx={style}>
+<<<<<<< HEAD
                         <Formik 
                             initialValues={{
                                 BookingDate: tomorrowDate.toISOString().split('T')[0],
@@ -405,6 +435,45 @@ export default function Page({ params } : Params){
                         </Form>
                         )}
                     </Formik>
+=======
+                        <Typography id="modal-modal-title" variant="h4" component="h4" className="fw-bold">
+                            <span className="text-primary">ROOM</span> INFORMATION
+                        </Typography>
+                        <div className="row mt-2">
+                            <div className="col-12 col-sm-12 col-md-6">
+                                <Image alt={roomView?.roomName??''} src={PUBLIC_IMAGE_UPLOAD + roomView?.image} width={1000} height={1000} className="image-fit" style={{width:'100%',height:300,borderRadius:15}}/>
+                            </div>
+                            <div className="col-12 col-sm-12 col-md-6">
+                                <p><b>Room Name: </b><span>{roomView?.roomName}</span></p>
+                                <p><b>People: </b><span>{roomView?.minPeople}-{roomView?.maxPeople}</span></p>
+                                <p><b>Price: </b><span>{FormatVND(roomView?.price + "")}</span></p>
+                                <p><b>Time serve:</b></p>
+                                <div role="group" aria-labelledby="my-radio-group">
+                                    {roomViewSlot && roomViewSlot.map((row, index) => (
+                                        <div className="mb-2" key={index}>
+                                            <label key={index}>
+                                                <input 
+                                                    type="radio" 
+                                                    className="form-check-input me-2" 
+                                                    name="SlotRadio" 
+                                                    value={row.slotID} 
+                                                    checked={index === selectedIndex}
+                                                    onChange={() => handleRadioChange(index)}
+                                                /> 
+                                                {TimeToString(row.startTime)}-{TimeToString(row.endTime)}
+                                            </label>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                        </div>
+                        <p style={{textAlign:'justify'}} className="mt-2">
+                            {roomView?.description}
+                        </p>
+                        <div className="d-flex justify-content-center">
+                                <button className="btn btn-primary">BOOKING THIS ROOM</button>
+                        </div>
+>>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
                     </Box>
                 </Modal>
             </div>
