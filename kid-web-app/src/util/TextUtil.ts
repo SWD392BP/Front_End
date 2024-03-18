@@ -22,7 +22,6 @@ export const GetLabelOfPackageType = (value: number) => {
     return '';
 }
 
-<<<<<<< HEAD
 export const TimeToString = (value: string) => {
     if(value.length>5){
         return value.slice(0,5);
@@ -30,8 +29,6 @@ export const TimeToString = (value: string) => {
     return value;
 }
 
-=======
->>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 export const GetDescriptionTextShort = (value: string) => {
     if(value.length > DESCRIPTION_SHORT_LENGTH){
         return value.slice(0, DESCRIPTION_SHORT_LENGTH) + "...";
@@ -50,11 +47,6 @@ export const GetTitleTextShort = (value: string) => {
     return value;
 }
 
-<<<<<<< HEAD
-=======
-
-
->>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 export const FormatVND = (value: string) => {
      // Xóa bỏ tất cả các ký tự không phải số từ chuỗi
      const numberString = value.replace(/\D/g, '');

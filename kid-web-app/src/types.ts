@@ -24,7 +24,6 @@ export interface Party {
     type: string,
     description: string,
     createDate: string,
-<<<<<<< HEAD
     image: string,
     hostUserID: number,
 }
@@ -35,10 +34,6 @@ export interface Menu {
     price: number,
     description: string,
     image: string,
-=======
-    image: string,
-    hostUserID: number,
->>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 }
 
 export interface Room {

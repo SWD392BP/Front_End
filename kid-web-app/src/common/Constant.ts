@@ -13,7 +13,8 @@ export const PUBLIC_IMAGE_UPLOAD = "/ImageUpload/";
 /*
  ** TABLE DATA
 */
-export const TABLE_DATA_SIZE = 2;
+export const TABLE_ROOM_BOOKING_SIZE = 2;
+export const TABLE_DATA_SIZE = 5;
 export const NUMBER_BUTTON_PAGINATION = 5;
 
 /*
@@ -37,6 +38,7 @@ export const USER_COOKIE = "userInfoCookie";
 */
 export const API_REGISTER_USER = URL_BASE_API + "/User/register";
 export const API_LOGIN = URL_BASE_API + "/User/login";
+export const API_LOGIN_WITH_GOOLE = URL_BASE_API + "/User/loginWithGoogle";
 
 /*
  ** MENU API
@@ -44,6 +46,7 @@ export const API_LOGIN = URL_BASE_API + "/User/login";
 export const API_CREATE_MENU = URL_BASE_API + "/Menu";
 export const API_GET_MENU_BY_PARTY_ID = URL_BASE_API + "/Menu/byPartyId/";
 export const API_GET_MENU_BY_HOST_ID = URL_BASE_API + "/Menu/byHostId/";
+export const API_GET_MENU_BY_HOST_ID_PAGING = URL_BASE_API + "/Menu/byHostIdPaging/";
 
 /*
  ** PARTY API
@@ -53,14 +56,11 @@ export const API_GET_LATEST_PARTY = URL_BASE_API + "/Party/";
 export const API_GET_TOP_MONTH_PARTY = URL_BASE_API + "/Party/TopMonth/";
 export const API_GET_PARTY_BY_ID = URL_BASE_API + "/Party/";
 export const API_GET_SEARCH_PARTY = URL_BASE_API + "/Party/SearchBooking/";
-<<<<<<< HEAD
 
 /*
  ** SLOT API
 */
 export const API_GET_SLOT_BY_ROOM_ID = URL_BASE_API + "/Slot/byRoomID/";
-=======
->>>>>>> 734b58f25bcec279c57eb64be0095b8b98ffb793
 
 /*
  ** ROOM API
@@ -76,8 +76,10 @@ export const API_CREATE_PACKAGE = URL_BASE_API + "/Package";
 export const API_GET_LATEST_PACKAGE = URL_BASE_API + "/Package/";
 
 /*
- ** ROOM API
+ ** BOOKING API
 */
+export const API_CREATE_BOOKING = URL_BASE_API + "/Booking";
+
 export const DESCRIPTION_SHORT_LENGTH = 200;
 export const TITLE_SHORT_LENGTH = 38;
 
