@@ -1,20 +1,18 @@
 'use client'
-import Image from "next/image";
+import * as ColorUtil from "@/common/ColorUtil";
+import { STATUS_CODE_ERROR, STATUS_CODE_OK, USER_COOKIE } from "@/common/Constant";
+import { ApiCreateMenu } from "@/service/MenuService";
+import { UserInfoCookie } from "@/types";
+import AddIcon from '@mui/icons-material/Add';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import { Button, ThemeProvider } from "@mui/material";
 import { Field, Form, Formik } from "formik";
+import Image from "next/image";
 import Link from "next/link";
-import * as ColorUtil from "@/common/ColorUtil";
-import AddIcon from '@mui/icons-material/Add';
-import * as Yup from 'yup';
-import { UserInfoCookie } from "@/types";
-import { useCookies } from "react-cookie";
 import { useRouter } from "next/navigation";
-import {PARTY_TYPE_LIST, STATUS_CODE_ERROR, STATUS_CODE_OK, USER_COOKIE } from "@/common/Constant";
-import { ChangeEvent } from "react";
-import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import React from "react";
-import { ApiCreateParty } from "@/service/PartyService";
-import { ApiCreateMenu } from "@/service/MenuService";
+import { useCookies } from "react-cookie";
+import * as Yup from 'yup';
 
 export default function Page (){
     const [cookieUser, setCookieUser, removeCookieUser] = useCookies([USER_COOKIE])
@@ -54,7 +52,7 @@ export default function Page (){
     return(
         <div className="row d-flex justify-content-center bg-graylight">
             <div className="col-12 col-sm-12 col-md-9 my-2 pt-3">
-                <h1 className="fw-bold text-danger">MENU <span className="text-dark">CREATE</span></h1>
+                <h1 className="fw-bold text-primary">MENU <span className="text-dark">CREATE</span></h1>
                 <Formik 
                     initialValues={{
                         MenuName: 'Combo gà siêu quậy',
@@ -110,7 +108,7 @@ export default function Page (){
                             </div>
                             
                             <div className="mt-4">
-                                <Button type="submit" variant="contained" startIcon={<AddIcon />} color="error">
+                                <Button type="submit" variant="contained" startIcon={<AddIcon />} color="primary">
                                     Register
                                 </Button>
                                 <Link href="/host/party" className="ms-2">
