@@ -1,13 +1,14 @@
 'use client'
-import { STATUS_CODE_OK, TABLE_DATA_SIZE, USER_COOKIE } from "@/common/Constant";
-import PaginationBar from "@/component/PaginationBar";
-import { ApiGetMenuByHostIDPaging } from "@/service/MenuService";
-import { Menu, UserInfoCookie } from "@/types";
-import { FormatVND } from "@/util/TextUtil";
 import Image from "next/image";
+import { STATUS_CODE_OK, TABLE_DATA_SIZE, USER_COOKIE } from "@/common/Constant";
+import { ApiGetLatestParty } from "@/service/PartyService";
+import { Menu, Party, UserInfoCookie } from "@/types";
 import Link from "next/link";
 import React from "react";
 import { useCookies } from "react-cookie";
+import { FormatVND, GetLabelOfPartyType } from "@/util/TextUtil";
+import PaginationBar from "@/component/PaginationBar";
+import { ApiGetMenuByHostIDPaging } from "@/service/MenuService";
 
 export default function Page (){
     const [cookieUser, setCookieUser, removeCookieUser] = useCookies([USER_COOKIE])

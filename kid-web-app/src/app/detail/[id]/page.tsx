@@ -1,23 +1,25 @@
 'use client';
-import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, STATUS_CODE_OK, TABLE_ROOM_BOOKING_SIZE, USER_COOKIE } from "@/common/Constant";
-import PaginationBar from "@/component/PaginationBar";
-import { ApiCreateBooking } from "@/service/BookingService";
-import { ApiGetMenuByPartyID } from "@/service/MenuService";
+import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, STATUS_CODE_OK, TABLE_DATA_SIZE, TABLE_ROOM_BOOKING_SIZE, USER_COOKIE } from "@/common/Constant";
 import { ApiGetPartyById } from "@/service/PartyService";
-import { ApiGetLatestRoom } from "@/service/RoomService";
-import { ApiGetSlotByRoomID } from "@/service/SlotService";
 import { Menu, Party, Room, Slot, UserInfoCookie } from "@/types";
-import { FormatVND, GetLabelOfPartyType, TimeToString } from "@/util/TextUtil";
-import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import PlaceIcon from '@mui/icons-material/Place';
-import ShareIcon from '@mui/icons-material/Share';
-import Box from '@mui/material/Box';
-import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
-import { Field, Form, Formik } from "formik";
-import Image from "next/image";
 import React from "react";
+import Image from "next/image";
+import PlaceIcon from '@mui/icons-material/Place';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import ShareIcon from '@mui/icons-material/Share';
+import { Field, Form, Formik, FormikValues } from "formik";
+import PaginationBar from "@/component/PaginationBar";
 import { useCookies } from "react-cookie";
+import { ApiGetLatestRoom } from "@/service/RoomService";
+import { FormatVND, GetLabelOfPartyType, TimeToString } from "@/util/TextUtil";
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Typography from '@mui/material/Typography';
+import Modal from '@mui/material/Modal';
+import { ApiGetSlotByRoomID } from "@/service/SlotService";
+import { ApiGetMenuByPartyID } from "@/service/MenuService";
+import { ApiCreateBooking } from "@/service/BookingService";
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -186,7 +188,9 @@ export default function Page({ params } : Params){
                                 <ShareIcon className="text-primary" /> <b className="ms-2">SHARE</b>
                             </div>
                         </div>
-                        <Image alt={party?.partyName??''} src={PUBLIC_IMAGE_UPLOAD + party?.image} width={1000} height={1000} className="image-fit" style={{width:'100%',height:500,borderRadius:15}}/>
+                        {party && (
+                            <Image alt={party.partyName??''} src={PUBLIC_IMAGE_UPLOAD + party.image} width={1000} height={1000} className="image-fit" style={{width:'100%',height:500,borderRadius:15}}/>
+                        )}
                     </div>
                 </div>
 
@@ -371,7 +375,7 @@ export default function Page({ params } : Params){
                                                             <tr key={index}>
                                                                 <td>{menu.menuName}</td>
                                                                 <td>
-                                                                    <Image alt={""} width={200} height={200} src={"/ImageUpload/"+menu.image} className="image-fit" style={{width: '100%', height: 100}} />
+                                                                    <Image alt={menu.menuName??'Error image'} width={200} height={200} src={"/ImageUpload/"+menu.image} className="image-fit" style={{width: '100%', height: 100}} />
                                                                 </td>
                                                                 <td>{FormatVND(menu.price.toString())}</td>
                                                                 <td>{menu.description}</td>
