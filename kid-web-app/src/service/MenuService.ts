@@ -31,12 +31,8 @@ export async function ApiGetMenuByPartyID(partyId: number){
     }
     return null;
 }
-<<<<<<< HEAD
 
 export async function ApiGetMenuByHostID(hostID: number){
-=======
-export async function ApiGetMenuByHostID(hostID: number, page?: number, size?:number){
->>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
     const response = await fetch(Constant.API_GET_MENU_BY_HOST_ID + hostID);
     if(response.ok){
         const result = await response.json();
@@ -45,7 +41,6 @@ export async function ApiGetMenuByHostID(hostID: number, page?: number, size?:nu
     return null;
 }
 
-<<<<<<< HEAD
 export async function ApiGetMenuByHostIDPaging(hostID: number, page: number, size:number){
     const response = await fetch(Constant.API_GET_MENU_BY_HOST_ID_PAGING + hostID + "/" + page + "/" + size);
     if(response.ok){
@@ -54,6 +49,3 @@ export async function ApiGetMenuByHostIDPaging(hostID: number, page: number, siz
     }
     return null;
 }
-=======
-
->>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617

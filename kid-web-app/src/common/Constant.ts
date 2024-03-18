@@ -46,10 +46,7 @@ export const API_LOGIN_WITH_GOOLE = URL_BASE_API + "/User/loginWithGoogle";
 export const API_CREATE_MENU = URL_BASE_API + "/Menu";
 export const API_GET_MENU_BY_PARTY_ID = URL_BASE_API + "/Menu/byPartyId/";
 export const API_GET_MENU_BY_HOST_ID = URL_BASE_API + "/Menu/byHostId/";
-<<<<<<< HEAD
 export const API_GET_MENU_BY_HOST_ID_PAGING = URL_BASE_API + "/Menu/byHostIdPaging/";
-=======
->>>>>>> 39a5a2697f0778cfae4c409e5510362bbf309617
 
 /*
  ** PARTY API
