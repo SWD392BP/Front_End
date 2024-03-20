@@ -36,6 +36,9 @@ export const USER_COOKIE = "userInfoCookie";
 /*
  ** USER API
 */
+export const API_CHANGE_PASSWORD = URL_BASE_API + "/User/changePW";
+export const API_USER_UPDATE_INFO = URL_BASE_API + "/User/updateInfo";
+export const API_USER_ORIGIN = URL_BASE_API + "/User/";
 export const API_REGISTER_USER = URL_BASE_API + "/User/register";
 export const API_LOGIN = URL_BASE_API + "/User/login";
 export const API_LOGIN_WITH_GOOLE = URL_BASE_API + "/User/loginWithGoogle";
@@ -43,14 +46,17 @@ export const API_LOGIN_WITH_GOOLE = URL_BASE_API + "/User/loginWithGoogle";
 /*
  ** MENU API
 */
+export const API_MENU_ORIGIN = URL_BASE_API + "/Menu/";
 export const API_CREATE_MENU = URL_BASE_API + "/Menu";
 export const API_GET_MENU_BY_PARTY_ID = URL_BASE_API + "/Menu/byPartyId/";
+export const API_GET_MENU_BY_ID = URL_BASE_API + "/Menu/";
 export const API_GET_MENU_BY_HOST_ID = URL_BASE_API + "/Menu/byHostId/";
 export const API_GET_MENU_BY_HOST_ID_PAGING = URL_BASE_API + "/Menu/byHostIdPaging/";
 
 /*
  ** PARTY API
 */
+export const API_PARTY_ORIGIN = URL_BASE_API + "/Party/";
 export const API_CREATE_PARTY = URL_BASE_API + "/Party";
 export const API_GET_LATEST_PARTY = URL_BASE_API + "/Party/";
 export const API_GET_TOP_MONTH_PARTY = URL_BASE_API + "/Party/TopMonth/";
@@ -65,15 +71,21 @@ export const API_GET_SLOT_BY_ROOM_ID = URL_BASE_API + "/Slot/byRoomID/";
 /*
  ** ROOM API
 */
+export const API_ROOM_ORIGIN = URL_BASE_API + "/Room/";
 export const API_CREATE_ROOM = URL_BASE_API + "/Room";
 export const API_GET_LATEST_ROOM = URL_BASE_API + "/Room/";
 export const API_GET_ROOM_BY_ID = URL_BASE_API + "/Room/";
+export const API_GET_ROOM_FOR_RENT = URL_BASE_API + "/Room/RoomForRent/";
+
 
 /*
  ** PACKAGE API
 */
+export const API_PACKAGE_ORIGIN = URL_BASE_API + "/Package/";
+export const API_GET_PACKAGE_ORDER_BY_ID = URL_BASE_API + "/Package/orderId/";
 export const API_CREATE_PACKAGE = URL_BASE_API + "/Package";
 export const API_GET_LATEST_PACKAGE = URL_BASE_API + "/Package/";
+export const API_CREATE_PACKAGE_ORDER = URL_BASE_API + "/Package/createOrder";
 
 /*
  ** BOOKING API
@@ -96,24 +108,31 @@ export const BOOKING_STATUS_DONE = "Done";
 export const BOOKING_STATUS_CANCEL = "Cancel";
 
 /*
+ ** ROLE LIST
+*/
+export const ROLE_HOST = "Host";
+export const ROLE_ADMIN = "Admin";
+export const ROLE_USER = "User";
+
+/*
  ** PACKAGE TYPE LIST
 */
 export const PACKAGE_TYPE_LIST = [
     {
         value: 30,
-        label: "1 tháng"
+        label: "1 Month"
     },
     {
         value: 90,
-        label: "3 tháng"
+        label: "3 Months"
     },
     {
         value: 365,
-        label: "1 năm"
+        label: "1 Year"
     },
     {
         value: 730,
-        label: "2 năm"
+        label: "2 Years"
     },
 ];
 /*

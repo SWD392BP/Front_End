@@ -9,6 +9,21 @@ export const GetLabelOfPartyType = (value: string) => {
     return '';
 }
 
+export const GetLabelOfPartyTypeArray = (value: string) => {
+    var split = value.split(",");
+    var result = "";
+    if(split && split.length > 1){
+        result = GetLabelOfPartyType(split[0]);
+        for(let k = 1; k < split.length;k++){
+            result += ", "+ GetLabelOfPartyType(split[k]);
+        }
+    }else{
+        return GetLabelOfPartyType(value);
+    }
+    return result;
+}
+
+
 export const RemoveDuplicateString = (array: string[]) => {
     return Array.from(new Set(array));
 }
@@ -23,6 +38,7 @@ export const GetLabelOfPackageType = (value: number) => {
 }
 
 export const TimeToString = (value: string) => {
+    console.log(value);
     if(value.length>5){
         return value.slice(0,5);
     }
