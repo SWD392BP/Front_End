@@ -1,109 +1,170 @@
 'use client'
+import * as ColorUtil from "@/common/ColorUtil";
+import { PUBLIC_IMAGE_UPLOAD, STATUS_CODE_ERROR, STATUS_CODE_OK, USER_COOKIE } from "@/common/Constant";
+import { ApiCreateOrUpdateMenu, ApiGetMenuByID } from "@/service/MenuService";
+import { Menu, UserInfoCookie } from "@/types";
+import AddIcon from '@mui/icons-material/Add';
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
+import { Button, ThemeProvider } from "@mui/material";
+import { Field, Form, Formik } from "formik";
 import Image from "next/image";
-import { STATUS_CODE_OK, TABLE_DATA_SIZE, USER_COOKIE } from "@/common/Constant";
-import { ApiGetLatestParty } from "@/service/PartyService";
-import { Menu, Party, UserInfoCookie } from "@/types";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React from "react";
 import { useCookies } from "react-cookie";
-import { FormatVND, GetLabelOfPartyType } from "@/util/TextUtil";
-import PaginationBar from "@/component/PaginationBar";
-import { ApiDeleteMenuByID, ApiGetMenuByHostIDPaging } from "@/service/MenuService";
-import { Button } from "@mui/material";
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
-import AddIcon from '@mui/icons-material/Add';
+import * as Yup from 'yup';
 
-export default function Page (){
+type Params = {
+    params: {
+        id: string;
+    }
+}
+export default function Page ({ params } : Params){
     const [cookieUser, setCookieUser, removeCookieUser] = useCookies([USER_COOKIE])
-    const [menus, setMenus] = React.useState<Menu[] | null>(null);
-    const [currentPage, setCurrentPage] = React.useState(1);
-    const [totalPage, setTotalPage] = React.useState(0);
-
+    const router = useRouter()
+    const inputRef = React.useRef<HTMLInputElement>(null);
+    const [thumbnailImage, setThumbnailImage] = React.useState<File | null>(null);
+    const [thumbnailLink, setThumbnailLink] = React.useState<string | null>(null);
+    const [thumbnailImageSrc, setThumbnailImageSrc] = React.useState<string | undefined>(undefined);
+    const [menu, setMenu] = React.useState<Menu | null>(null);
     React.useEffect(()=>{
-        fetchMenuByHostIDPaging(1);
+        fetchMenuByID(params.id);
     },[]);
 
-    async function handleClickDeleteById(id: string){
-        const resultCf = confirm("Are you sure delete this menu?")
-        if(resultCf){
-            const result = await ApiDeleteMenuByID(id);
-            if(result && result.code == STATUS_CODE_OK){
-                alert("Delete menu successfully!");
-                fetchMenuByHostIDPaging(currentPage);
-            }else{
-                alert("Delete menu failed!");
-            }
+    async function fetchMenuByID(id: string){
+        const result = await ApiGetMenuByID(id);
+        if(result && result.code == STATUS_CODE_OK){
+            const menuData = result.data as Menu;
+            setMenu(menuData);
+            setThumbnailLink(menuData.image);
         }
     }
 
-    async function fetchMenuByHostIDPaging(page: number){
+    const handleAddPhotoClick = () => {
+        if (inputRef.current) {
+            inputRef.current.click();
+        }
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            setThumbnailImage(files[0]);
+            const imageUrl = URL.createObjectURL(files[0]);
+            setThumbnailImageSrc(imageUrl);
+        }
+    };
+
+    const handleSubmitMenu = async (values : MenuFormValues) => {
         const userInfoCookie = cookieUser.userInfoCookie as UserInfoCookie;
         if(userInfoCookie){
-            const result = await ApiGetMenuByHostIDPaging(userInfoCookie.userID, page, TABLE_DATA_SIZE);
-            if(result && result.code == STATUS_CODE_OK){
-                setMenus(result.data);
-                const totalPage = result.totalPage ?? 1;
-                setTotalPage(totalPage);
-                window.scrollTo(0, 0);
+            var result = await ApiCreateOrUpdateMenu(userInfoCookie.userID,values.MenuName, values.Price, values.Description, thumbnailImage, userInfoCookie.token, menu?.menuID.toString()??'0');
+            if(result?.code==STATUS_CODE_OK){
+                alert("Edit menu successfully!");
+            }else if(result?.code==STATUS_CODE_ERROR){
+                alert(result?.message);
+            }else{
+                alert("Edit menu failed!");
             }
         }
     }
-
-    const handleChangePage = (num : number) => {
-        setCurrentPage(num);
-        fetchMenuByHostIDPaging(num);
-    }
-
     return(
         <div className="row d-flex justify-content-center bg-graylight">
             <div className="col-12 col-sm-12 col-md-9 my-2 pt-3">
-                <h1 className="fw-bold text-primary">MENU <span className="text-dark">MANAGEMENT</span></h1>
-                <Link href="/host/menu/create"><Button variant="contained" color="primary" startIcon={<AddIcon />}>CREATE MENU</Button></Link>
-
-                {/* <!-- TABLE --> */}
-                <div className="row p-0 m-0 my-3">
-                    <div className="col-12 col-sm-12 col-md-12 p-0 m-0">
-                    <table className="table table-bordered table-hover">
-                        <thead>
-                        <tr>
-                            <th className="w-20">Name</th>
-                            <th className="w-20">Image</th>
-                            <th className="w-20">Price</th>
-                            <th className="w-20">Description</th>
-                            <th className="w-20">Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                            { menus && menus.length > 0 && menus.map((menu, index)=>(
-                                <tr key={index}>
-                                    <td>{menu.menuName}</td>
-                                    <td>
-                                        <Image alt={""} width={400} height={400} src={"/ImageUpload/"+menu.image} className="image-fit" style={{width: '100%', height: 150}} />
-                                    </td>
-                                    <td>{FormatVND(menu.price.toString())}</td>
-                                    <td>{menu.description}</td>
-                                    <td>
-                                        <Link href={"/host/menu/edit/" + menu.menuID} className="text-decoration-underline text-primary me-2"><Button variant="contained" color="primary" startIcon={<EditIcon />}>Edit</Button></Link>
-                                        <Button variant="contained" className="bg-dark" startIcon={<DeleteIcon />} onClick={()=>handleClickDeleteById(menu.menuID.toString())}>Delete</Button>
-                                    </td>
-                                </tr>
-                            )) || (
-                                <tr>
-                                    <td colSpan={5}>Data is empty</td>
-                                </tr>
+                <h1 className="fw-bold text-primary">MENU <span className="text-dark">EDIT</span></h1>
+                {menu && (
+                    <Formik 
+                        initialValues={{
+                            MenuName: menu.menuName,
+                            Price: menu.price,
+                            Description: menu.description,
+                        }}
+                        validationSchema={MenuValidateSchema}
+                        onSubmit={values=>handleSubmitMenu(values)}>
+                            {({ errors, setFieldValue, touched }) => (
+                            <Form>
+                                <div className="row">
+                                    {/* LEFT FORM */}
+                                    <div className="col-12 col-sm-12 col-md-6">
+                                        <div className="form-group mt-2">
+                                            <label className="fw-bold" htmlFor="MenuName">Menu Name: </label>
+                                            <Field type="text" name="MenuName" className="form-control" required/>
+                                            {errors.MenuName && touched.MenuName ? (
+                                                <div className="fw-bold text-danger">{errors.MenuName}</div>
+                                            ) : null}
+                                        </div>
+                                        <div className="form-group mt-2">
+                                            <label className="fw-bold" htmlFor="Price">Price: </label>
+                                            <Field type="number" name="Price" className="form-control" required/>
+                                            {errors.Price && touched.Price ? (
+                                                <div className="fw-bold text-danger">{errors.Price}</div>
+                                            ) : null}
+                                        </div>
+                                        <div className="form-group mt-2">
+                                            <label className="fw-bold" htmlFor="Description">Description: </label>
+                                            <Field as="textarea" name="Description" className="form-control" rows={8}></Field>
+                                            {errors.Description && touched.Description ? (
+                                                <div className="fw-bold text-danger">{errors.Description}</div>
+                                            ) : null}
+                                        </div>
+                                    </div>
+                                    {/* RIGHT AVATAR IMAGE */}
+                                    <div className="col-12 col-sm-12 col-md-6">
+                                        {
+                                            thumbnailImageSrc && (
+                                                <div className="d-flex justify-content-center align-items-center w-100 border-radius-black h-100" style={{maxHeight:445}} onClick={handleAddPhotoClick}>
+                                                    <Image alt={""} width={600} height={600} src={thumbnailImageSrc} className="border-radius-black image-fit w-100"  style={{maxHeight:445}} />
+                                                </div>
+                                            ) || thumbnailLink && (
+                                                <div className="d-flex justify-content-center align-items-center w-100 border-radius-black h-100" style={{maxHeight:445}} onClick={handleAddPhotoClick}>
+                                                    <Image alt={""} width={600} height={600} src={PUBLIC_IMAGE_UPLOAD + thumbnailLink} className="border-radius-black image-fit w-100"  style={{maxHeight:445}} />
+                                                </div>
+                                            ) || (
+                                                <div className="d-flex justify-content-center align-items-center w-100 border-radius-black h-100" style={{maxHeight:445}} onClick={handleAddPhotoClick}>
+                                                    <AddAPhotoIcon style={{fontSize:56}} />
+                                                </div>
+                                            )
+                                        }
+                                    </div>
+                                    <div className="d-none">
+                                        <Field type="file" name="thumbnail_image" className="form-control" onChange={handleFileChange} innerRef={inputRef} />
+                                    </div>
+                                </div>
+                                
+                                <div className="mt-4">
+                                    <Button type="submit" variant="contained" startIcon={<AddIcon />} color="primary">
+                                        Save
+                                    </Button>
+                                    <Link href="/host/menu" className="ms-2">
+                                        <ThemeProvider theme={ColorUtil.ColorGray}>
+                                            <Button variant="contained" color="primary">back</Button>
+                                        </ThemeProvider>
+                                    </Link>
+                                </div>
+                            </Form>
                             )}
-                        
-                        </tbody>
-                    </table>
-                    {/* PAGINATION BAR */}
-                    {totalPage != 0 && (
-                        <PaginationBar totalPage={totalPage} currentPage={currentPage} handleChangePage={handleChangePage} />
-                    )}
-                    </div>
-                </div>
+                </Formik>
+                )}
+                
             </div>
         </div>
     );
 }
 
+
+
+const MenuValidateSchema = Yup.object().shape({
+    MenuName: Yup.string()
+      .min(5,'MenuName name must be at least 5 characters')  
+      .max(255, 'MenuName maximum 255 characters')
+      .required('Please enter MenuName.'),
+    Price: Yup.number()
+      .min(100000,'Price must be at least 100000')  
+      .max(1000000000, 'Price maximum 1000000000')
+});
+
+interface MenuFormValues {
+    MenuName: string;
+    Price: number;
+    Description: string;
+}
