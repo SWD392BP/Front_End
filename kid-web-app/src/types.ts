@@ -53,7 +53,10 @@ export interface Room {
 export interface Booking {
     bookingID: number,
     partyName: string,
+    fullName: string,
+    phoneNumber: string,
     roomName: string,
+    image: string,
     roomPrice: number,
     menuName: number,
     menuPrice: number,
@@ -83,11 +86,20 @@ export interface PackageOrder{
 export interface Feedback{
     feedbackID: number,
     userID: number,
+    image: string,
     bookingID: number,
     rating: number,
     comment: string,
+    createDate: string,
 }
 
+export interface Schedule{
+    dateOfMonth: string,
+    day: string,
+    dayOfWeek: string,
+    amountParty: number,
+    isToday: boolean,
+}
 
 export interface MomoReponse {
     amount : number,

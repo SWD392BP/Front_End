@@ -48,6 +48,15 @@ export async function ApiGetBookingByUserID(page:number, size:number ,userID: nu
     return null;
 }
 
+export async function ApiGetBookingByDate(hostId: number, bookingDate: string){
+    const response = await fetch(Constant.API_GET_BOOKING_BY_BOOKING_DATE + hostId + "/" + bookingDate);
+    if(response.ok){
+        const result = await response.json();
+        return result as JsonBody;
+    }
+    return null;
+}
+
 export async function ApiChangeBookingStatus(bookingID: string, status: string){
     const response = await fetch(Constant.API_CHANGE_STATUS_BOOKING + bookingID + "/" + status);
     if(response.ok){ 
@@ -58,6 +67,11 @@ export async function ApiChangeBookingStatus(bookingID: string, status: string){
 }
 
 export async function ApiPaymentMomo(amount: string, title: string, orderId: string){
+    var amountInt = parseInt(amount);
+    var finalAmount = amountInt;
+    if(amountInt < 1000){
+        finalAmount = amountInt * 10;
+    }
     try {
         const response = await fetch('/api/momo-payment', {
             method: 'POST',
@@ -65,7 +79,7 @@ export async function ApiPaymentMomo(amount: string, title: string, orderId: str
             'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                amount,
+                amount : finalAmount,
                 title,
                 orderId
             // Thêm các thông tin cần thiết cho yêu cầu API của bạn
