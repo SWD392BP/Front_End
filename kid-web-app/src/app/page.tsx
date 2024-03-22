@@ -22,7 +22,7 @@ export default function Home() {
   },[]);
 
   async function fetchLatestParty(page: number){
-    const result = await ApiGetLatestParty(page, 4);
+    const result = await ApiGetTopMonthParty(page, 4);
     if(result && result.code == STATUS_CODE_OK){
         setCarouselParties(result.data);
     }

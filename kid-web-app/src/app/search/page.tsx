@@ -10,13 +10,14 @@ import Link from "next/link";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import PaginationBar from "@/component/PaginationBar";
-import { Rating } from "@mui/material";
+import { Alert, Rating } from "@mui/material";
 export default function Page (){
     const [parties,setParties] = React.useState<Party[] | null>(null);
     const [isEmptyResult,setIsEmptyResult] = React.useState(false);
     const router = useRouter();
     const [currentPage, setCurrentPage] = React.useState(1);
     const [totalPage, setTotalPage] = React.useState(0);
+    const [errorMessage, setErrorMessage] = React.useState(false);
 
     //URL PARAMS
     const searchParams = useSearchParams()
@@ -63,6 +64,10 @@ export default function Page (){
     }
 
     function handleSubmitSearch(values: { DateBooking: string; People: number; Type: string; BookingTime: string; }): any {
+        if(values.DateBooking === '' || values.People === 0 || values.Type === '' || values.BookingTime === ''){
+            setErrorMessage(true);
+            return;
+        } else setErrorMessage(false);
         router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}&SlotTime=${values.BookingTime}&TypeSearch=0`);
     }
 
@@ -109,7 +114,12 @@ export default function Page (){
                                             <label htmlFor="BookingTime" className="text-light my-2">Booking time: </label>
                                             <Field type="time" className="form-control" name="BookingTime" />
                                         </div>
-                                        <button type="submit" className="btn btn-light mt-4 w-100">BOOKING NOW</button>
+                                        <button type="submit" className="mb-5 btn btn-light mt-4 w-100">BOOKING NOW</button>
+                                        {errorMessage && (
+                                          <Alert severity="error">
+                                                Please fill in all required fields.
+                                            </Alert>
+                                        )}
                                     </Form>
                                     )}
                             </Formik>
