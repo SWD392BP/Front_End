@@ -1,6 +1,6 @@
 'use client';
-import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, STATUS_CODE_ERROR, STATUS_CODE_OK, TABLE_DATA_SIZE, TABLE_ROOM_BOOKING_SIZE, USER_COOKIE } from "@/common/Constant";
-import { ApiGetPartyById } from "@/service/PartyService";
+import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, ROLE_ADMIN, ROLE_HOST, STATUS_CODE_ERROR, STATUS_CODE_OK, TABLE_DATA_SIZE, TABLE_ROOM_BOOKING_SIZE, USER_COOKIE } from "@/common/Constant";
+import { ApiGetPartyById, ApiUpdateViewed } from "@/service/PartyService";
 import { Feedback, Menu, Party, Room, Slot, UserInfoCookie } from "@/types";
 import React, { ChangeEvent } from "react";
 import Image from "next/image";
@@ -21,8 +21,9 @@ import { ApiGetSlotBookingByRoomID, ApiGetSlotByRoomID } from "@/service/SlotSer
 import { ApiGetMenuByPartyID } from "@/service/MenuService";
 import { ApiCreateBooking } from "@/service/BookingService";
 import { useRouter, useSearchParams } from "next/navigation";
-import { ApiGetFeedbackByPartyID } from "@/service/FeedbackService";
+import { ApiCreateFeedback, ApiCreateReply, ApiGetFeedbackByPartyID } from "@/service/FeedbackService";
 import { Rating } from "@mui/material";
+import MarkEmailReadIcon from '@mui/icons-material/MarkEmailRead';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -58,6 +59,12 @@ export default function Page({ params } : Params){
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const [rateValue, setRateValue] = React.useState(0);
+    const [feedbackSelected, setFeedbackSelected] = React.useState<Feedback | null>(null);
+
+    const [openFeedback, setOpenFeedback] = React.useState(false);
+    const handleOpenFeedback = () => setOpenFeedback(true);
+    const handleCloseFeedback = () => setOpenFeedback(false);
     const router = useRouter();
 
     //URL PARAMS
@@ -66,6 +73,7 @@ export default function Page({ params } : Params){
     const [dateString, setDateString] = React.useState(searchParams.get('DateBooking')??'');
     const [SlotTime, setSlotTime] = React.useState(searchParams.get('SlotTime')??'');
     const [People, setPeople] = React.useState(searchParams.get('People')??'');
+    const [canReply, setCanReply] = React.useState(false);
 
     const currentDate = new Date();
     const tomorrowDate = new Date(currentDate);
@@ -74,14 +82,28 @@ export default function Page({ params } : Params){
     React.useEffect(()=>{
         fetchGetPartyById(params.id);
         fetchFeedbackByPartyID(params.id);
+        ApiUpdateViewed(params.id);
     }, []);
+
+    function CheckRole(hostUserID: number){
+        const userInfoCookie = cookieUser.userInfoCookie as UserInfoCookie;
+        if(userInfoCookie){
+            if(userInfoCookie.role == ROLE_HOST && hostUserID == userInfoCookie.userID){
+                setCanReply(true);
+            } else if(userInfoCookie.role == ROLE_ADMIN){
+                setCanReply(true);
+            }
+        }
+    }
 
     async function fetchGetPartyById(id: number){
         const result = await ApiGetPartyById(id);
         if(result && result.code == STATUS_CODE_OK){
-            setParty(result.data);
+            const partyData = result.data as Party;
+            setParty(partyData);
             fetchAllRoomForRent(1, id);
-            fetchMenuByPartyId(result.data.partyID);
+            fetchMenuByPartyId(partyData.partyID);
+            CheckRole(partyData.hostUserID);
             return;
         }else if(result && result.code == STATUS_CODE_ERROR){
             alert(result.message);
@@ -124,15 +146,6 @@ export default function Page({ params } : Params){
         return null;
     }
 
-    // async function fetchAllMenuInPartyId(id: number){
-    //     const result = await ApiGetAllMenuInPartyId(id);
-    //     if(result && result.code == STATUS_CODE_OK){
-    //         setRoomViewSlot(result.data);
-    //         return;
-    //     }
-    //     setRoomViewSlot(null);
-    // }
-
     async function fetchAllRoomForRent(page: number, partyId: number){
         var people = People;
         if(People == "NaN"){
@@ -143,7 +156,6 @@ export default function Page({ params } : Params){
             setRooms(result.data);
             const totalPage = result.totalPage ?? 1;
             setTotalPage(totalPage);
-            //window.scrollTo(0, 0);
         }
         setIsSearching(false);
     }
@@ -154,13 +166,12 @@ export default function Page({ params } : Params){
             setRooms(result.data);
             const totalPage = result.totalPage ?? 1;
             setTotalPage(totalPage);
-            //window.scrollTo(0, 0);
         }
         setIsSearching(false);
     }
 
     function handleSubmitSearch(values: { DateBooking: string; People: number; Type: string; BookingTime: string; }): any {
-        router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}&SlotTime=${values.BookingTime}`);
+        router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}&SlotTime=${values.BookingTime}&TypeSearch=0`);
     }
 
     async function handleSubmitSearchRoomForRent(values: SearchFormValues) {
@@ -206,7 +217,6 @@ export default function Page({ params } : Params){
 
     const handleClickViewRoom = async (room: Room) => {
         setRoomView(room);
-        //await fetchGetSlotByRoomID(room.roomID);
         const slots = await fetchGetSlotBookingByRoomID(room.roomID,dateString) as Slot[];
         for(let i = 0; i < slots.length; i++){
             if(!slots[i].used){
@@ -237,6 +247,30 @@ export default function Page({ params } : Params){
         setFieldValue("BookingDate", dateBookingSelect);
     };
     
+    const handleSubmitFeedback = async (values : FeedbackFormValues) => {
+        const userInfoCookie = cookieUser.userInfoCookie as UserInfoCookie;
+        if(userInfoCookie && feedbackSelected){
+            var result = await ApiCreateReply(userInfoCookie.userID, feedbackSelected.feedbackID ,values.Comment);
+            if(result?.code==STATUS_CODE_OK){
+                alert("Send reply successfully!");
+                handleCloseFeedback();
+                fetchFeedbackByPartyID(params.id);
+            }else if(result?.code==STATUS_CODE_ERROR){
+                alert(result?.message);
+            }else{
+                alert("Send reply failed!");
+            }
+        }
+    }
+
+    const handleSetRating = async (newValue: number) => {
+        setRateValue(newValue);
+    }
+
+    function handleClickReply(row: Feedback): void {
+        setFeedbackSelected(row);
+        handleOpenFeedback();
+    }
 
     return (
         <div className="row d-flex justify-content-center bg-white">
@@ -287,6 +321,9 @@ export default function Page({ params } : Params){
                         <h3 className="fw-bold">{party?.partyName}</h3>
                         <div className="d-flex align-items-center my-2">
                             <PlaceIcon className="text-primary"/> <b className="me-2">{party?.address}</b> - Vị trí hiển thị trên bản đồ
+                            <div className="ms-3">
+                                <Rating value={party?.rating??0} disabled />
+                            </div>
                             <div className="flex-grow-1"></div>
                             <div className="cursor-pointer d-flex align-items-center">
                                 <FavoriteBorderIcon className="text-primary" /> <b className="ms-2">LIKE</b>
@@ -394,17 +431,23 @@ export default function Page({ params } : Params){
             {/* <!-- FEEBBACK --> */}
             <h4>FEEDBACKS ({feedbacks && feedbacks.length || 0})</h4>
             {feedbacks && feedbacks.map((row, index)=>(
-                    <div className="d-flex">
+                    <div className={`d-flex mb-4 ${row.type=="Reply"?'ms-5':''}`}>
                         <div>
-                            <Image alt={''} src={PUBLIC_IMAGE_UPLOAD + row.image} width={80} height={80} className="image-fit"/>
+                            <Image alt={''} src={PUBLIC_IMAGE_UPLOAD + row.image} width={400} height={400} className="image-fit" style={{width:80,height:80,borderRadius:'50%'}}/>
                         </div>
                         <div className="ps-3">
+                            {row.type == "Reply" && (
+                                <div style={{textAlign:'justify', borderRadius:10}} className="bg-secondary text-white p-2">{row.replyComment}</div>
+                            )}
                             <span style={{textAlign:'justify'}}>{row.comment}</span>
-                            <div>
+                            <div className={`${row.type=="Reply"?'d-none':''}`}>
                                 <Rating value={row.rating} disabled />
                             </div>
                             <div>
-                                {GetDateFormat(row.createDate)}
+                                {GetDateFormat(row.createDate)} 
+                                {canReply && (
+                                    <span className={`text-primary text-decoration-underline ms-2 cursor-pointer ${row.type=="Reply"?'d-none':''}`} onClick={()=>handleClickReply(row)}>Reply</span>
+                                )}
                             </div>
                         </div>
                     </div>
@@ -550,6 +593,49 @@ export default function Page({ params } : Params){
             </div>
 
 
+
+
+
+            {/* MODAL FEEDBACK  */}
+            <div>
+                <Modal
+                    open={openFeedback}
+                    onClose={handleCloseFeedback}
+                    aria-labelledby="modal-modal-title"
+                    aria-describedby="modal-modal-description"
+                    >
+                    <Box sx={style}>
+                        <h5 className="text-center fw-bold">SEND FEEDBACK</h5>
+                        <div className="mb-2">
+                            <label className="fw-bold" htmlFor="simple-controlled">Customer said: </label>
+                        </div>
+                        <p>{feedbackSelected?feedbackSelected.comment:''}</p>
+                        <Formik 
+                                initialValues={{
+                                    Comment: '',
+                                }}
+                                onSubmit={values=>handleSubmitFeedback(values)}>
+                                    {({ errors, setFieldValue, touched }) => (
+                                    <Form>
+                                        <div className="form-group mt-2">
+                                            <label className="fw-bold" htmlFor="Description">Comment: </label>
+                                            <Field as="textarea" name="Comment" className="form-control" rows={5} placeholder="Input your comment"></Field>
+                                            {errors.Comment && touched.Comment ? (
+                                                <div className="fw-bold text-danger">{errors.Comment}</div>
+                                            ) : null}
+                                        </div>
+                                        <div className="mt-2 d-flex justify-content-end">
+                                                <Button type="submit" variant="contained" color="primary" startIcon={<MarkEmailReadIcon />}>Send</Button>
+                                        </div>
+                                    </Form>
+                                )}
+                        </Formik>
+                    </Box>
+                </Modal>
+            </div>
+
+
+
             </div>
         </div>
     );
@@ -567,4 +653,7 @@ interface SearchFormValues {
     People: number; 
     Type: string; 
     BookingTime: string; 
+}
+interface FeedbackFormValues {
+    Comment: string;
 }

@@ -271,3 +271,21 @@ a {
   text-align: center;
   padding-top: 2px;
 }
+
+.s-text {
+  text-decoration: line-through;
+}
+.w-120 {
+  width: 120px;
+}
+.w-170 {
+  width: 170px;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: inline-block;
+  width: 100%;
+}

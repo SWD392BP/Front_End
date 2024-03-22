@@ -10,6 +10,7 @@ import { GetLabelOfPartyType } from "@/util/TextUtil";
 import { Field, Form, Formik } from "formik";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { Rating } from "@mui/material";
 
 export default function Home() {
   const [carouselParties, setCarouselParties] = React.useState<Party[] | null>(null);
@@ -36,7 +37,7 @@ export default function Home() {
 
 
   function handleSubmitSearch(values: { DateBooking: string; People: string; Type: string; }): any {
-    router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}`);
+    router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}&TypeSearch=0`);
   }
 
   return (<div>
@@ -101,34 +102,34 @@ export default function Home() {
                   <div className="carousel-inner py-5 m-0">
                       {carouselParties && carouselParties.length > 3 && (
                         <>
-                          <div className="carousel-item active position-relative">
+                          <Link className="carousel-item active position-relative" href={`/detail/${carouselParties[0].partyID}`}>
                             <Image src={PUBLIC_IMAGE_UPLOAD + carouselParties[0].image} alt={carouselParties[0].partyName} width={1000} height={1000} className="image-fit" style={{width:'100%', height: 400}} /> 
                             <div className="position-absolute carousel-title w-100">
                                 <h3 className="text-white">{carouselParties[0].partyName}</h3>
                                 <h5 className="text-white">{carouselParties[0].address} - {GetLabelOfPartyType(carouselParties[0].type)}</h5>
                             </div>
-                          </div>
-                          <div className="carousel-item position-relative">
+                          </Link>
+                          <Link className="carousel-item position-relative" href={`/detail/${carouselParties[1].partyID}`}>
                             <Image src={PUBLIC_IMAGE_UPLOAD + carouselParties[1].image} alt={carouselParties[1].partyName} width={1000} height={1000} className="image-fit" style={{width:'100%', height: 400}} /> 
                             <div className="position-absolute carousel-title w-100">
                                 <h3 className="text-white">{carouselParties[1].partyName}</h3>
                                 <h5 className="text-white">{carouselParties[1].address} - {GetLabelOfPartyType(carouselParties[1].type)}</h5>
                             </div>
-                          </div>
-                          <div className="carousel-item position-relative">
+                          </Link>
+                          <Link className="carousel-item position-relative" href={`/detail/${carouselParties[2].partyID}`}>
                             <Image src={PUBLIC_IMAGE_UPLOAD + carouselParties[2].image} alt={carouselParties[2].partyName} width={1000} height={1000} className="image-fit" style={{width:'100%', height: 400}} /> 
                             <div className="position-absolute carousel-title w-100">
                                 <h3 className="text-white">{carouselParties[2].partyName}</h3>
                                 <h5 className="text-white">{carouselParties[2].address} - {GetLabelOfPartyType(carouselParties[2].type)}</h5>
                             </div>
-                          </div>
-                          <div className="carousel-item position-relative">
+                          </Link>
+                          <Link className="carousel-item position-relative" href={`/detail/${carouselParties[3].partyID}`}>
                             <Image src={PUBLIC_IMAGE_UPLOAD + carouselParties[3].image} alt={carouselParties[3].partyName} width={1000} height={1000} className="image-fit" style={{width:'100%', height: 400}} /> 
                             <div className="position-absolute carousel-title w-100">
                                 <h3 className="text-white">{carouselParties[3].partyName}</h3>
                                 <h5 className="text-white">{carouselParties[3].address} - {GetLabelOfPartyType(carouselParties[3].type)}</h5>
                             </div>
-                          </div>
+                          </Link>
                         </>
                       )}
                   </div>
@@ -196,7 +197,7 @@ export default function Home() {
         </div>
 
 
-        {/* <!-- PARTY MỚI NHẤT --> */}
+        {/* <!-- PARTY HOT TRONG THÁNG --> */}
         <div className="row d-flex justify-content-center bg-graylight">
           <div className="col-12 col-sm-12 col-md-9 my-2 pt-3">
               <span className="fs-24 my-3">TOP VIEWED IN MONTH</span>
@@ -204,7 +205,10 @@ export default function Home() {
                   {topMonthPaties && topMonthPaties.map((row, index)=>(
                     <Link href={"/detail/"+row.partyID} key={index} className="col-6 col-sm-6 col-md-3 text-hover-lightblue pt-3">
                         <Image alt={""} src={PUBLIC_IMAGE_UPLOAD + row.image} width={500} height={500} style={{width:'100%',height:200,borderRadius:15}}/>
-                        <span>{row.partyName}</span>
+                        <span className="ellipsis">{row.partyName}</span>
+                        <div>
+                            <Rating value={row.rating} disabled />
+                        </div>
                     </Link>
                   ))}
               </div>

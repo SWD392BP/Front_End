@@ -15,12 +15,22 @@ export interface User {
     password: string,
     role: string,
     status: string,
+    revenue: number,
     token: string,
+}
+
+export interface Statistic {
+    statisticID: number,
+    month: number,
+    year: number,
+    amount: number,
+    type: string,
 }
 
 export interface Party {
     partyID: number,
     monthViewed: number,
+    rating: number,
     partyName: string,
     address: string,
     type: string,
@@ -52,6 +62,7 @@ export interface Room {
 
 export interface Booking {
     bookingID: number,
+    partyID: number,
     partyName: string,
     fullName: string,
     phoneNumber: string,
@@ -71,6 +82,7 @@ export interface Booking {
 
 export interface PackageOrder{
     packageOrderID: number,
+    fullName: string,
     voucherID: number,
     voucherCode: string,
     voucherPrice: string,
@@ -85,11 +97,14 @@ export interface PackageOrder{
 
 export interface Feedback{
     feedbackID: number,
+    feedbackReplyID: number,
     userID: number,
     image: string,
     bookingID: number,
     rating: number,
     comment: string,
+    replyComment: string,
+    type: string,
     createDate: string,
 }
 

@@ -1,6 +1,6 @@
 'use client'
 import { PARTY_TYPE_LIST, PUBLIC_IMAGE_UPLOAD, STATUS_CODE_OK } from "@/common/Constant";
-import { ApiGetPartiesSearch } from "@/service/PartyService";
+import { ApiGetPartiesSearch, ApiGetPartiesSearchName } from "@/service/PartyService";
 import { Party } from "@/types";
 import { useRouter, useSearchParams } from "next/navigation";
 import React from "react";
@@ -10,6 +10,7 @@ import Link from "next/link";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import PaginationBar from "@/component/PaginationBar";
+import { Rating } from "@mui/material";
 export default function Page (){
     const [parties,setParties] = React.useState<Party[] | null>(null);
     const [isEmptyResult,setIsEmptyResult] = React.useState(false);
@@ -23,29 +24,46 @@ export default function Page (){
     const dateString = searchParams.get('DateBooking')??'';
     const SlotTime = searchParams.get('SlotTime')??'';
     const People = searchParams.get('People')??'';
-
+    const SearchName = searchParams.get('SearchName')??'';
+    const TypeSearch = searchParams.get('TypeSearch')??'0';
 
     React.useEffect(()=>{
         fetchGetPartiesSearch(1);
-    }, [Type, dateString, SlotTime, People]);
+    }, [Type, dateString, SlotTime, People, SearchName]);
 
     async function fetchGetPartiesSearch(page: number){
-        const result = await ApiGetPartiesSearch(Type, dateString, SlotTime, People, page, 10);
-        if(result && result.code == STATUS_CODE_OK){
-            setParties(result.data);
-            const totalPage = result.totalPage ?? 1;
-            setTotalPage(totalPage);
-            window.scrollTo(0, 0);
-            if(result.data.length > 0){
-                setIsEmptyResult(false);
-            }else{
-                setIsEmptyResult(true); 
+        if(TypeSearch == "1"){
+            const result = await ApiGetPartiesSearchName(SearchName, page, 10);
+            console.log(result);
+            if(result && result.code == STATUS_CODE_OK){
+                setParties(result.data);
+                const totalPage = result.totalPage ?? 1;
+                setTotalPage(totalPage);
+                window.scrollTo(0, 0);
+                if(result.data.length > 0){
+                    setIsEmptyResult(false);
+                }else{
+                    setIsEmptyResult(true); 
+                }
+            }
+        }else{
+            const result = await ApiGetPartiesSearch(Type, dateString, SlotTime, People, page, 10);
+            if(result && result.code == STATUS_CODE_OK){
+                setParties(result.data);
+                const totalPage = result.totalPage ?? 1;
+                setTotalPage(totalPage);
+                window.scrollTo(0, 0);
+                if(result.data.length > 0){
+                    setIsEmptyResult(false);
+                }else{
+                    setIsEmptyResult(true); 
+                }
             }
         }
     }
 
     function handleSubmitSearch(values: { DateBooking: string; People: number; Type: string; BookingTime: string; }): any {
-        router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}&SlotTime=${values.BookingTime}`);
+        router.push(`/search?DateBooking=${values.DateBooking}&People=${values.People}&Type=${values.Type}&SlotTime=${values.BookingTime}&TypeSearch=0`);
     }
 
     const handleChangePage = (num : number) => {
@@ -119,6 +137,9 @@ export default function Page (){
                                         <b className="ms-5">Create Date:</b> {GetDateFormat(row.createDate)}
                                     </div>
                                     <p style={{textAlign:'justify'}}>{GetDescriptionTextShort(row.description)}</p>
+                                    <div>
+                                        <Rating value={row.rating} disabled />
+                                    </div>
                                 </div>
                             </div>
                         ))}
