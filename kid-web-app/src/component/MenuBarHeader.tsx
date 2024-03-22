@@ -1,7 +1,5 @@
 'use client'
-
 import { PARTY_TYPE_LIST, ROLE_ADMIN, ROLE_HOST, STATUS_CODE_OK, TABLE_DATA_SIZE, USER_COOKIE } from "@/common/Constant";
-
 import { UserInfoCookie } from "@/types";
 import Image from "next/image";
 import Link from "next/link";
